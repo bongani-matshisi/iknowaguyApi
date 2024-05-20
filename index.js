@@ -15,6 +15,7 @@ const pfValidSignature = (pfData, pfParamString, pfPassphrase = null ) => {
       pfParamString +=`&passphrase=${encodeURIComponent(pfPassphrase.trim()).replace(/%20/g, "+")}`;
     }
     const signature = crypto.createHash("md5").update(pfParamString).digest("hex");
+    console.log(signature);
     return pfData['signature'] === signature;
   };
   
@@ -78,6 +79,8 @@ app.post("/notify", (req, res) => {
     //console.log(req.body);
     const pfData = JSON.parse(JSON.stringify(req.body));
 
+    console.log("pd data");
+    console.log(pfData)
     let pfParamString = "";
     for (let key in pfData) {
         if (pfData.hasOwnProperty(key) && key !== "signature") {
