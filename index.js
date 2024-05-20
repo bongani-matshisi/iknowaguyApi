@@ -76,7 +76,7 @@ app.post("/notify", (req, res) => {
     const testingMode = true;
     const pfHost = testingMode ? "sandbox.payfast.co.za" : "www.payfast.co.za";
 
-    //console.log(req.body);
+    console.log(req.body);
     const pfData = JSON.parse(JSON.stringify(req.body));
 
     console.log("pd data");
