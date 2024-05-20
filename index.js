@@ -97,9 +97,11 @@ app.post("/notify", (req, res) => {
 
 if(check1==true ) {
     // All checks have passed, the payment is successful
+    console.log("valid checks")
     res.status(200).json({ message: "valid checks" });
 } else {
     // Some checks have failed, check payment manually and log for investigation
+    console.log("invalid checks")
     res.status(200).json({ message: "invalid checks" });
 }
 
