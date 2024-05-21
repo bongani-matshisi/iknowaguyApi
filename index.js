@@ -6,9 +6,13 @@ const cors = require("cors");
 const bodyParser = require('body-parser');
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Middleware to parse application/json
 app.use(bodyParser.json());
+app.use(cors());
+// app.use(express.json());
+// app.use(bodyParser.json());
 
 const pfValidSignature = (pfData, pfParamString, pfPassphrase = null ) => {
     // Calculate security signature
