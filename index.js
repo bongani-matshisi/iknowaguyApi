@@ -98,10 +98,10 @@ app.post("/notify", (req, res) => {
     pfParamString = pfParamString.slice(0, -1);
     const passPhrase = "jt7NOE43FZPn";
     const check1 = pfValidSignature(pfData, pfParamString, passPhrase);
-   // const check2 = pfValidIP(req);
-    //const check4 = pfValidServerConfirmation(pfHost, pfParamString);
+    const check2 = pfValidIP(req);
+    const check4 = pfValidServerConfirmation(pfHost, pfParamString);
 
-if(check1==true ) {
+if(check1==true && check2==true && check4==true) {
     // All checks have passed, the payment is successful
     console.log("valid checks")
     res.status(200).json({ message: "valid checks" });
