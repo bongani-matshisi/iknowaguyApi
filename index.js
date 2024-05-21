@@ -99,7 +99,7 @@ app.post("/notify", (req, res) => {
     const check2 = pfValidIP(req);
     const check4 = pfValidServerConfirmation(pfHost, pfParamString);
 
-if(check1==true ) {
+if(check1==true && check4==true) {
     // All checks have passed, the payment is successful
     console.log("valid checks")
     res.status(200).json({ message: "valid checks" });
