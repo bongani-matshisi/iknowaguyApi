@@ -3,7 +3,7 @@ const serviceAccount = require('./inknowaguy-firebase-adminsdk.json');
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://console.firebase.google.com/project/inknowaguy/database/inknowaguy-default-rtdb/data/~2F"
+  databaseURL: process.env.DB_URL
 });
 
 const db = admin.firestore();
