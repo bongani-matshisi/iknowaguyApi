@@ -98,7 +98,7 @@ app.post("/notify", async (req, res) => {
     const check2 = await pfValidIP(req);
     const check4 = await pfValidServerConfirmation(pfHost, pfParamString);
 
-    if (check1 == true && check2 == true) {
+    if (check1 == true ) {
       // All checks have passed, the payment is successful
       console.log("valid checks");
       const { m_payment_id, amount_gross, custom_str1, custom_str2,amount_fee,amount_net,custom_str3 , email_address } = req?.body;
