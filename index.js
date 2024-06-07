@@ -209,7 +209,7 @@ app.post('/sendemail',async(req,res)=>{
 			html:`<p>Hi ${name}, ${message}</p><br>
 			<p>Kind Regards,</p><br> <strong>I-Know-A-Guy Team</strong>`
 		}).then(()=>{
-      res.status(400).json({ message:"email deliverd" });
+      res.status(200).json({ message:"email deliverd" });
     }).catch((error)=>{
       res.status(400).json({ message:"error: "+error?.message });
     })
