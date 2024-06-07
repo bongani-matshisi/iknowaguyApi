@@ -7,6 +7,8 @@ const cors = require("cors");
 const bodyParser = require('body-parser');
 const db = require("./dbConfig");
 const moment = require('moment');
+const nodemailer = require("nodemailer");
+const SendSmsToCustomer = require('./utils/sendSms');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -101,7 +103,7 @@ app.post("/notify", async (req, res) => {
     if (check1 == true ) {
       // All checks have passed, the payment is successful
       console.log("valid checks");
-      const { m_payment_id, amount_gross, custom_str1, custom_str2,amount_fee,amount_net,custom_str3 , email_address } = req?.body;
+      const { m_payment_id, amount_gross, custom_str1, custom_str2,amount_fee,amount_net,custom_str3 ,name_first,name_last, email_address } = req?.body;
       console.log(req.body);
       const docRef = db.collection('BidCredits').doc(custom_str1);
 
@@ -119,8 +121,8 @@ app.post("/notify", async (req, res) => {
           // Update specific fields in the document
           docRef.update(updateBalance).then(() => {
             console.log('Document successfully updated!');
-            //send success rechange sms
-
+            const site='https://inkowaguy.vercel.app/login';
+            SendSmsToCustomer(`Hi ${name_first+" "+name_last},\n Thank you for recharging your account with us on I-know-A-Guy.\n You bought the ${custom_str2} package. You may review your account balance on the site : ${site} \n\n Kind Reagerds,\n I Know A Guy Team.`,custom_str3?.trim());
 
           }).catch((error) => {
             console.error('Error updating document: ', error);
@@ -128,6 +130,10 @@ app.post("/notify", async (req, res) => {
 
         } else {
           //send sms recharge failure
+          SendSmsToCustomer(`Hi Future,\n sorry we had a technical issue while attempting to recharche your account (avoid attempting to recharge your account until you consult with us).\n Kindly contact our adminstration Team.\n\nOrder Details\n
+          Package: ${custom_str2}
+          \nGross Amount: ${amount_gross}
+           \nRefference Key: ${m_payment_id}`,custom_str3?.trim());
         }
       }).catch((error) => {
         //send sms recharge failure
@@ -160,8 +166,6 @@ app.post('/verify-recaptcha', async (req, res) => {
     });
 
     if (response.data.success) {
-      // Token is valid
-      console.log("success");
       res.json({ success: true, message: 'reCAPTCHA verification successful' });
     } else {
       // Token is invalid
@@ -172,7 +176,47 @@ app.post('/verify-recaptcha', async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
-app.listen(4000, () => {
+app.post('/smscustomer',(req,res)=>{
+  try {
+    const {messsage,phone}=req.body;
+    SendSmsToCustomer(messsage,phone);
+    res.status(200).json({ message:"message sent to receipint" });
+  } catch (error) {
+    res.status(400).json({ message:error?.mesage });
+  }
+})
+
+app.post('/sendemail',async(req,res)=>{
+  console.log(req.body);
+  const {name,email,message,subject}=req.body;
+  try {
+    const transporter = nodemailer.createTransport({
+			service: process.env.SERVICE,
+			port: 587,
+			secure: true,
+			auth: {
+				user: process.env.USER,
+				pass: process.env.PASS,
+			},
+		});
+
+		 transporter.sendMail({
+			from: process.env.USER,
+			to: email,
+			subject: subject,
+			
+			html:`<p>Hi ${name}, ${message}</p><br>
+			<p>Kind Regards,</p><br> <strong>I-Know-A-Guy Team</strong>`
+		}).then(()=>{
+      res.status(400).json({ message:"email deliverd" });
+    }).catch((error)=>{
+      res.status(400).json({ message:"error: "+error?.message });
+    })
+  } catch (error) {
+    res.status(400).json({ message:error?.mesage });
+  }
+});
+app.listen(process.env.PORT, () => {
   console.log("Listening on port : " + process.env.PORT)
 });
 
