@@ -193,7 +193,7 @@ app.post('/sendemail',async(req,res)=>{
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
 			service: process.env.SERVICE,
-			port: 587,
+			port: process.env.EMAILPORT,
 			secure: true,
 			auth: {
 				user: process.env.USER,
