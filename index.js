@@ -207,12 +207,12 @@ app.post('/sendemailawardingproject',async(req,res)=>{
 			to: email,
 			subject: subject,
 			
-			html:`<p>Dear. ${name},<br>You have been awarded the project for instaltion of lights that you places a bid on.<br></p>
+			html:`<p>Dear. ${name},<br>You have been awarded the project for ${message?.project} that you placed a bid on.<br></p>
       <p><h4 style="text-decoration: underline">Project Details</h4><br>
-      project: instaltion of lights<br>
-      homeowmer: Steven Manual<br>
-      phone number : 0760170950</p><br>
-      <p> You may contact the homeowner using their details which you will find under your profile on the I Know A Guy website.</p><br>
+      project: ${message?.project}<br>
+      homeowmer: ${message?.homeowmer}<br>
+      phone number : ${message?.phoneNum}</p><br>
+      <p> You may contact the homeowner using more of their details which you will find under your profile on the I Know A Guy website.</p><br>
 			<p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
 		}).then(()=>{
       res.status(200).json({ message:"email deliverd" });
@@ -245,13 +245,13 @@ app.post('/sendemailrecommendation',async(req,res)=>{
 			subject: subject,
 			html:`<p>Dear. ${name},<br>You have been recommended for a project on I Know a Guy website<br></p>
       <p><h4 style="text-decoration: underline">Recommendation Details</h4><br>
-      Contractor's Name : ${message.contName}<br>
-      Company Name: ${message.cmpName}<br>
-      Contractor's Phone No. : ${message.cmpPhone}</p><br>
-      Compay's Address : ${message.cmpAddr}</p><br>
-      Company's Service(s) : ${message.cmpService}</p><br>
-      Recommending Person's Name : ${message.recomName}</p><br>
-      Indicated Relationship : "${message.relation}"</p><br>
+      Contractor's Name : ${message?.contName}<br>
+      Company Name: ${message?.cmpName}<br>
+      Contractor's Phone No. : ${message?.cmpPhone}</p><br>
+      Compay's Address : ${message?.cmpAddr}</p><br>
+      Company's Service(s) : ${message?.cmpService}</p><br>
+      Recommending Person's Name : ${message?.recomName}</p><br>
+      Indicated Relationship : "${message?.relation}"</p><br>
       <p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
 		}).then(()=>{
       res.status(200).json({ message:"email deliverd" });
@@ -284,13 +284,13 @@ app.post('/sendemailAdminRecommendationCopy',async(req,res)=>{
 			subject: subject,
 			html:`<p>Dear. ${name},<br>A recommendation has been made on I Know a Guy website<br></p>
       <p><h4 style="text-decoration: underline">Recommendation Details</h4><br>
-      Contractor's Name : instaltion of lights<br>
-      Company Name: Steven Manual<br>
-      Contractor's Phone No. : 0760170950</p><br>
-      Compay's Address : 0760170950</p><br>
-      Company's Service(s) : 0760170950</p><br>
-      Recommending Person's Name : 0760170950</p><br>
-      Indicated Relationship : "I've Hired them"</p><br>
+      Contractor's Name : ${message?.contName}<br>
+      Company Name: ${message?.cmpName}<br>
+      Contractor's Phone No. : ${message?.cmpPhone}</p><br>
+      Compay's Address : ${message?.cmpAddr}</p><br>
+      Company's Service(s) : ${message?.cmpService}</p><br>
+      Recommending Person's Name : ${message?.recomName}</p><br>
+      Indicated Relationship : "${message?.relation}"</p><br>
       <p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
 		}).then(()=>{
       res.status(200).json({ message:"email deliverd" });
