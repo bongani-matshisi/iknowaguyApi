@@ -186,19 +186,20 @@ app.post('/smscustomer',(req,res)=>{
   }
 })
 
-app.post('/sendemail',async(req,res)=>{
+app.post('/sendemailawardingproject',async(req,res)=>{
   console.log(req.body);
   const {name,email,message,subject}=req.body;
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
-			service: process.env.SERVICE,
+	    //service: process.env.SERVICE,
 			port: process.env.EMAILPORT,
 			secure: true,
 			auth: {
 				user: process.env.USER,
 				pass: process.env.PASS,
 			},
+      rejectUnauthorized: true,
 		});
 
 		 transporter.sendMail({
@@ -206,8 +207,91 @@ app.post('/sendemail',async(req,res)=>{
 			to: email,
 			subject: subject,
 			
-			html:`<p>Hi ${name}, ${message}</p><br>
-			<p>Kind Regards,</p><br> <strong>I-Know-A-Guy Team</strong>`
+			html:`<p>Dear. ${name},<br>You have been awarded the project for instaltion of lights that you places a bid on.<br></p>
+      <p><h4 style="text-decoration: underline">Project Details</h4><br>
+      project: instaltion of lights<br>
+      homeowmer: Steven Manual<br>
+      phone number : 0760170950</p><br>
+      <p> You may contact the homeowner using their details which you will find under your profile on the I Know A Guy website.</p><br>
+			<p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
+		}).then(()=>{
+      res.status(200).json({ message:"email deliverd" });
+    }).catch((error)=>{
+      res.status(400).json({ message:"error: "+error?.message });
+    })
+  } catch (error) {
+    res.status(400).json({ message:error?.mesage });
+  }
+});
+app.post('/sendemailrecommendation',async(req,res)=>{
+  console.log(req.body);
+  const {name,email,message,subject}=req.body;
+  try {
+    const transporter = nodemailer.createTransport({
+      host: process.env.HOST,
+	    //service: process.env.SERVICE,
+			port: process.env.EMAILPORT,
+			secure: true,
+			auth: {
+				user: process.env.USER,
+				pass: process.env.PASS,
+			},
+      rejectUnauthorized: true,
+		});
+
+		 transporter.sendMail({
+			from: process.env.USER,
+			to: email,
+			subject: subject,
+			html:`<p>Dear. ${name},<br>You have been recommended for a project on I Know a Guy website<br></p>
+      <p><h4 style="text-decoration: underline">Recommendation Details</h4><br>
+      Contractor's Name : ${message.contName}<br>
+      Company Name: ${message.cmpName}<br>
+      Contractor's Phone No. : ${message.cmpPhone}</p><br>
+      Compay's Address : ${message.cmpAddr}</p><br>
+      Company's Service(s) : ${message.cmpService}</p><br>
+      Recommending Person's Name : ${message.recomName}</p><br>
+      Indicated Relationship : "${message.relation}"</p><br>
+      <p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
+		}).then(()=>{
+      res.status(200).json({ message:"email deliverd" });
+    }).catch((error)=>{
+      res.status(400).json({ message:"error: "+error?.message });
+    })
+  } catch (error) {
+    res.status(400).json({ message:error?.mesage });
+  }
+});
+app.post('/sendemailAdminRecommendationCopy',async(req,res)=>{
+  console.log(req.body);
+  const {name,email,message,subject}=req.body;
+  try {
+    const transporter = nodemailer.createTransport({
+      host: process.env.HOST,
+	    //service: process.env.SERVICE,
+			port: process.env.EMAILPORT,
+			secure: true,
+			auth: {
+				user: process.env.USER,
+				pass: process.env.PASS,
+			},
+      rejectUnauthorized: true,
+		});
+
+		 transporter.sendMail({
+			from: process.env.USER,
+			to: email,
+			subject: subject,
+			html:`<p>Dear. ${name},<br>A recommendation has been made on I Know a Guy website<br></p>
+      <p><h4 style="text-decoration: underline">Recommendation Details</h4><br>
+      Contractor's Name : instaltion of lights<br>
+      Company Name: Steven Manual<br>
+      Contractor's Phone No. : 0760170950</p><br>
+      Compay's Address : 0760170950</p><br>
+      Company's Service(s) : 0760170950</p><br>
+      Recommending Person's Name : 0760170950</p><br>
+      Indicated Relationship : "I've Hired them"</p><br>
+      <p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
 		}).then(()=>{
       res.status(200).json({ message:"email deliverd" });
     }).catch((error)=>{
