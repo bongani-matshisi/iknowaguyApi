@@ -185,7 +185,6 @@ app.post('/smscustomer',(req,res)=>{
     res.status(400).json({ message:error?.mesage });
   }
 })
-
 app.post('/sendemailawardingproject',async(req,res)=>{
   console.log(req.body);
   const {name,email,message,subject}=req.body;
@@ -243,14 +242,14 @@ app.post('/sendemailrecommendation',async(req,res)=>{
 			from: process.env.USER,
 			to: email,
 			subject: subject,
-			html:`<p>Dear. ${name},<br>You have been recommended for a project on I Know a Guy website<br></p>
+			html:`<p>Dear. ${name},<br>You have been recommended for a project on I Know a Guy website</p><br>
       <p><h4 style="text-decoration: underline">Recommendation Details</h4><br>
       Contractor's Name : ${message?.contName}<br>
       Company Name: ${message?.cmpName}<br>
-      Contractor's Phone No. : ${message?.cmpPhone}</p><br>
-      Compay's Address : ${message?.cmpAddr}</p><br>
-      Company's Service(s) : ${message?.cmpService}</p><br>
-      Recommending Person's Name : ${message?.recomName}</p><br>
+      Contractor's Phone No. : ${message?.cmpPhone}<br>
+      Compay's Address : ${message?.cmpAddr}<br>
+      Company's Service(s) : ${message?.cmpService}<br>
+      Recommending Person's Name : ${message?.recomName}<br>
       Indicated Relationship : "${message?.relation}"</p><br>
       <p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
 		}).then(()=>{
@@ -282,14 +281,14 @@ app.post('/sendemailAdminRecommendationCopy',async(req,res)=>{
 			from: process.env.USER,
 			to: email,
 			subject: subject,
-			html:`<p>Dear. ${name},<br>A recommendation has been made on I Know a Guy website<br></p>
+			html:`<p>A recommendation has been made on I Know a Guy website<br></p>
       <p><h4 style="text-decoration: underline">Recommendation Details</h4><br>
       Contractor's Name : ${message?.contName}<br>
       Company Name: ${message?.cmpName}<br>
-      Contractor's Phone No. : ${message?.cmpPhone}</p><br>
-      Compay's Address : ${message?.cmpAddr}</p><br>
-      Company's Service(s) : ${message?.cmpService}</p><br>
-      Recommending Person's Name : ${message?.recomName}</p><br>
+      Contractor's Phone No. : ${message?.cmpPhone}<br>
+      Compay's Address : ${message?.cmpAddr}<br>
+      Company's Service(s) : ${message?.cmpService}<br>
+      Recommending Person's Name : ${message?.recomName}<br>
       Indicated Relationship : "${message?.relation}"</p><br>
       <p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
 		}).then(()=>{
@@ -304,4 +303,3 @@ app.post('/sendemailAdminRecommendationCopy',async(req,res)=>{
 app.listen(process.env.PORT, () => {
   console.log("Listening on port : " + process.env.PORT)
 });
-
