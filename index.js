@@ -9,13 +9,19 @@ const db = require("./dbConfig");
 const moment = require('moment');
 const nodemailer = require("nodemailer");
 const SendSmsToCustomer = require('./utils/sendSms');
-
+const validDomais = [
+  'www.payfast.co.za',
+  'sandbox.payfast.co.za',
+  'w1w.payfast.co.za',
+  'w2w.payfast.co.za',
+  "https://inkowaguy.vercel.app",
+  "https://www.iknowaguysa.co.za",
+  "https://www.paysho.co.za"
+];
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// Middleware to parse application/json
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({origin:validDomais}));
 
 const pfValidSignature = (pfData, pfParamString, pfPassphrase = null) => {
   // Calculate security signature
@@ -186,12 +192,10 @@ app.post('/smscustomer',(req,res)=>{
   }
 })
 app.post('/sendemailawardingproject',async(req,res)=>{
-  console.log(req.body);
   const {name,email,message,subject}=req.body;
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
-	    //service: process.env.SERVICE,
 			port: process.env.EMAILPORT,
 			secure: true,
 			auth: {
@@ -206,7 +210,7 @@ app.post('/sendemailawardingproject',async(req,res)=>{
 			to: email,
 			subject: subject,
 			
-			html:`<p>Dear. ${name},<br>You have been awarded the project for ${message?.project} that you placed a bid on.<br></p>
+			html:`<p>Dear ${name},<br>You have been awarded the project for ${message?.project} that you placed a bid on.</p><br>
       <p><h4 style="text-decoration: underline">Project Details</h4><br>
       project: ${message?.project}<br>
       homeowmer: ${message?.homeowmer}<br>
@@ -223,12 +227,10 @@ app.post('/sendemailawardingproject',async(req,res)=>{
   }
 });
 app.post('/sendemailrecommendation',async(req,res)=>{
-  console.log(req.body);
   const {name,email,message,subject}=req.body;
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
-	    //service: process.env.SERVICE,
 			port: process.env.EMAILPORT,
 			secure: true,
 			auth: {
@@ -242,7 +244,7 @@ app.post('/sendemailrecommendation',async(req,res)=>{
 			from: process.env.USER,
 			to: email,
 			subject: subject,
-			html:`<p>Dear. ${name},<br>You have been recommended for a project on I Know a Guy website</p><br>
+			html:`<p>Dear ${name},<br>You have been recommended for a project on I Know a Guy website</p><br>
       <p><h4 style="text-decoration: underline">Recommendation Details</h4><br>
       Contractor's Name : ${message?.contName}<br>
       Company Name: ${message?.cmpName}<br>
@@ -262,12 +264,10 @@ app.post('/sendemailrecommendation',async(req,res)=>{
   }
 });
 app.post('/sendemailAdminRecommendationCopy',async(req,res)=>{
-  console.log(req.body);
-  const {name,email,message,subject}=req.body;
+  const {email,message,subject}=req.body;
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
-	    //service: process.env.SERVICE,
 			port: process.env.EMAILPORT,
 			secure: true,
 			auth: {
@@ -281,7 +281,7 @@ app.post('/sendemailAdminRecommendationCopy',async(req,res)=>{
 			from: process.env.USER,
 			to: email,
 			subject: subject,
-			html:`<p>A recommendation has been made on I Know a Guy website<br></p>
+			html:`<p>A recommendation has been made on I Know a Guy website</p><br>
       <p><h4 style="text-decoration: underline">Recommendation Details</h4><br>
       Contractor's Name : ${message?.contName}<br>
       Company Name: ${message?.cmpName}<br>
