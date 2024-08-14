@@ -8,7 +8,6 @@ const bodyParser = require('body-parser');
 const db = require("./dbConfig");
 const moment = require('moment');
 const nodemailer = require("nodemailer");
-const SendSmsToCustomer = require('./utils/sendSms');
 const validDomais = [
   'www.payfast.co.za',
   'sandbox.payfast.co.za',
@@ -16,12 +15,13 @@ const validDomais = [
   'w2w.payfast.co.za',
   "https://inkowaguy.vercel.app",
   "https://www.iknowaguysa.co.za",
-  "https://www.paysho.co.za"
+  "https://www.paysho.co.za",
+  "https://payfastpaymentvalidator.onrender.com"
 ];
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors({origin:validDomais}));
+app.use(cors({ origin: validDomais }));
 
 const pfValidSignature = (pfData, pfParamString, pfPassphrase = null) => {
   // Calculate security signature
@@ -106,10 +106,10 @@ app.post("/notify", async (req, res) => {
     const check2 = await pfValidIP(req);
     const check4 = await pfValidServerConfirmation(pfHost, pfParamString);
 
-    if (check1 == true ) {
+    if (check1 == true) {
       // All checks have passed, the payment is successful
       console.log("valid checks");
-      const { m_payment_id, amount_gross, custom_str1, custom_str2,amount_fee,amount_net,custom_str3 ,name_first,name_last, email_address } = req?.body;
+      const { m_payment_id, amount_gross, custom_str1, custom_str2, amount_fee, amount_net, custom_str3, name_first, name_last, email_address } = req?.body;
       console.log(req.body);
       const docRef = db.collection('BidCredits').doc(custom_str1);
 
@@ -122,13 +122,13 @@ app.post("/notify", async (req, res) => {
           updateBalance = {
             credit: custom_str2 == "Bronze" ? credit + 5 : custom_str2 == "Silver" ? credit + 10 : credit + 20,
             CreditType: "paid",
-            tokens: [...tokens, { "tk": m_payment_id, "pdate": moment().format('MMMM Do YYYY, h:mm a'),amount_gross,amount_fee,amount_net,"Package":custom_str2,"phone":custom_str3 }]
+            tokens: [...tokens, { "tk": m_payment_id, "pdate": moment().format('MMMM Do YYYY, h:mm a'), amount_gross, amount_fee, amount_net, "Package": custom_str2, "phone": custom_str3 }]
           }
           // Update specific fields in the document
           docRef.update(updateBalance).then(() => {
             console.log('Document successfully updated!');
-            const site='https://inkowaguy.vercel.app/login';
-            SendSmsToCustomer(`Hi ${name_first+" "+name_last},\n Thank you for recharging your account with us on I-know-A-Guy.\n You bought the ${custom_str2} package. You may review your account balance on the site : ${site} \n\n Kind Reagerds,\n I Know A Guy Team.`,custom_str3?.trim());
+            const site = 'https://inkowaguy.vercel.app/login';
+            SendSmsToCustomer(`Hi ${name_first + " " + name_last},\n Thank you for recharging your account with us on I-know-A-Guy.\n You bought the ${custom_str2} package. You may review your account balance on the site : ${site} \n\n Kind Reagerds,\n I Know A Guy Team.`, custom_str3?.trim());
 
           }).catch((error) => {
             console.error('Error updating document: ', error);
@@ -139,7 +139,7 @@ app.post("/notify", async (req, res) => {
           SendSmsToCustomer(`Hi Future,\n sorry we had a technical issue while attempting to recharche your account (avoid attempting to recharge your account until you consult with us).\n Kindly contact our adminstration Team.\n\nOrder Details\n
           Package: ${custom_str2}
           \nGross Amount: ${amount_gross}
-           \nRefference Key: ${m_payment_id}`,custom_str3?.trim());
+           \nRefference Key: ${m_payment_id}`, custom_str3?.trim());
         }
       }).catch((error) => {
         //send sms recharge failure
@@ -182,69 +182,61 @@ app.post('/verify-recaptcha', async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 });
-app.post('/smscustomer',(req,res)=>{
-  try {
-    const {messsage,phone}=req.body;
-    SendSmsToCustomer(messsage,phone);
-    res.status(200).json({ message:"message sent to receipint" });
-  } catch (error) {
-    res.status(400).json({ message:error?.mesage });
-  }
-})
-app.post('/sendemailawardingproject',async(req,res)=>{
-  const {name,email,message,subject}=req.body;
+
+app.post('/sendemailawardingproject', async (req, res) => {
+  const { name, email, message, subject } = req.body;
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
-			port: process.env.EMAILPORT,
-			secure: true,
-			auth: {
-				user: process.env.USER,
-				pass: process.env.PASS,
-			},
+      port: process.env.EMAILPORT,
+      secure: true,
+      auth: {
+        user: process.env.USER,
+        pass: process.env.PASS,
+      },
       rejectUnauthorized: true,
-		});
+    });
 
-		 transporter.sendMail({
-			from: process.env.USER,
-			to: email,
-			subject: subject,
-			
-			html:`<p>Dear ${name},<br>You have been awarded the project for ${message?.project} that you placed a bid on.</p><br>
+    transporter.sendMail({
+      from: process.env.USER,
+      to: email,
+      subject: subject,
+
+      html: `<p>Dear ${name},<br>You have been awarded the project for ${message?.project} that you placed a bid on.</p><br>
       <p><h4 style="text-decoration: underline">Project Details</h4><br>
       project: ${message?.project}<br>
       homeowmer: ${message?.homeowmer}<br>
       phone number : ${message?.phoneNum}</p><br>
       <p> You may contact the homeowner using more of their details which you will find under your profile on the I Know A Guy website.</p><br>
 			<p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
-		}).then(()=>{
-      res.status(200).json({ message:"email deliverd" });
-    }).catch((error)=>{
-      res.status(400).json({ message:"error: "+error?.message });
+    }).then(() => {
+      res.status(200).json({ message: "email deliverd" });
+    }).catch((error) => {
+      res.status(400).json({ message: "error: " + error?.message });
     })
   } catch (error) {
-    res.status(400).json({ message:error?.mesage });
+    res.status(400).json({ message: error?.mesage });
   }
 });
-app.post('/sendemailrecommendation',async(req,res)=>{
-  const {name,email,message,subject}=req.body;
+app.post('/sendemailrecommendation', async (req, res) => {
+  const { name, email, message, subject } = req.body;
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
-			port: process.env.EMAILPORT,
-			secure: true,
-			auth: {
-				user: process.env.USER,
-				pass: process.env.PASS,
-			},
+      port: process.env.EMAILPORT,
+      secure: true,
+      auth: {
+        user: process.env.USER,
+        pass: process.env.PASS,
+      },
       rejectUnauthorized: true,
-		});
+    });
 
-		 transporter.sendMail({
-			from: process.env.USER,
-			to: email,
-			subject: subject,
-			html:`<p>Dear ${name},<br>You have been recommended for a project on I Know a Guy website</p><br>
+    transporter.sendMail({
+      from: process.env.USER,
+      to: email,
+      subject: subject,
+      html: `<p>Dear ${name},<br>You have been recommended for a project on I Know a Guy website</p><br>
       <p><h4 style="text-decoration: underline">Recommendation Details</h4><br>
       Contractor's Name : ${message?.contName}<br>
       Company Name: ${message?.cmpName}<br>
@@ -254,34 +246,34 @@ app.post('/sendemailrecommendation',async(req,res)=>{
       Recommending Person's Name : ${message?.recomName}<br>
       Indicated Relationship : "${message?.relation}"</p><br>
       <p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
-		}).then(()=>{
-      res.status(200).json({ message:"email deliverd" });
-    }).catch((error)=>{
-      res.status(400).json({ message:"error: "+error?.message });
+    }).then(() => {
+      res.status(200).json({ message: "email deliverd" });
+    }).catch((error) => {
+      res.status(400).json({ message: "error: " + error?.message });
     })
   } catch (error) {
-    res.status(400).json({ message:error?.mesage });
+    res.status(400).json({ message: error?.mesage });
   }
 });
-app.post('/sendemailAdminRecommendationCopy',async(req,res)=>{
-  const {email,message,subject}=req.body;
+app.post('/sendemailAdminRecommendationCopy', async (req, res) => {
+  const { email, message, subject } = req.body;
   try {
     const transporter = nodemailer.createTransport({
       host: process.env.HOST,
-			port: process.env.EMAILPORT,
-			secure: true,
-			auth: {
-				user: process.env.USER,
-				pass: process.env.PASS,
-			},
+      port: process.env.EMAILPORT,
+      secure: true,
+      auth: {
+        user: process.env.USER,
+        pass: process.env.PASS,
+      },
       rejectUnauthorized: true,
-		});
+    });
 
-		 transporter.sendMail({
-			from: process.env.USER,
-			to: email,
-			subject: subject,
-			html:`<p>A recommendation has been made on I Know a Guy website</p><br>
+    transporter.sendMail({
+      from: process.env.USER,
+      to: email,
+      subject: subject,
+      html: `<p>A recommendation has been made on I Know a Guy website</p><br>
       <p><h4 style="text-decoration: underline">Recommendation Details</h4><br>
       Contractor's Name : ${message?.contName}<br>
       Company Name: ${message?.cmpName}<br>
@@ -291,15 +283,50 @@ app.post('/sendemailAdminRecommendationCopy',async(req,res)=>{
       Recommending Person's Name : ${message?.recomName}<br>
       Indicated Relationship : "${message?.relation}"</p><br>
       <p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
-		}).then(()=>{
-      res.status(200).json({ message:"email deliverd" });
-    }).catch((error)=>{
-      res.status(400).json({ message:"error: "+error?.message });
+    }).then(() => {
+      res.status(200).json({ message: "email deliverd" });
+    }).catch((error) => {
+      res.status(400).json({ message: "error: " + error?.message });
     })
   } catch (error) {
-    res.status(400).json({ message:error?.mesage });
+    res.status(400).json({ message: error?.mesage });
   }
 });
+app.post('/smscustomer', async (req, res) => {
+  try {
+    const { message, phone } = req.body;
+    let apiKey = process.env.SMS_API_KEY;
+    let apiSecret = process.env.SMS_API_SECRET;
+    let accountApiCredentials = apiKey + ':' + apiSecret;
+
+    let buff = new Buffer.from(accountApiCredentials);
+    let base64Credentials = buff.toString('base64');
+
+    let requestHeaders = {
+      headers: {
+        'Authorization': `Basic ${base64Credentials}`,
+        'Content-Type': 'application/json'
+      }
+    };
+
+    let requestData = JSON.stringify({
+      messages: [{
+        content: message.trim(),
+        destination: phone.trim()
+      }]
+    });
+
+    const response = await axios.post('https://rest.smsportal.com/bulkmessages', requestData, requestHeaders);
+    if (response?.data) {
+      res.status(200).json(response?.data);
+    }
+
+  } catch (error) {
+    console.log("Send SMS Failure:");
+    console.log(error?.response.data);
+    res.status(400).json({ message: "error: " + error?.message });
+  }
+})
 app.listen(process.env.PORT, () => {
   console.log("Listening on port : " + process.env.PORT)
 });
