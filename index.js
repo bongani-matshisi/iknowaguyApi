@@ -128,7 +128,7 @@ app.post("/notify", async (req, res) => {
           docRef.update(updateBalance).then(() => {
             console.log('Document successfully updated!');
             const site = 'https://inkowaguy.vercel.app/login';
-            SendSmsToCustomer(`Hi ${name_first + " " + name_last},\n Thank you for recharging your account with us on I-know-A-Guy.\n You bought the ${custom_str2} package. You may review your account balance on the site : ${site} \n\n Kind Reagerds,\n I Know A Guy Team.`, custom_str3?.trim());
+            //SendSmsToCustomer(`Hi ${name_first + " " + name_last},\n Thank you for recharging your account with us on I-know-A-Guy.\n You bought the ${custom_str2} package. You may review your account balance on the site : ${site} \n\n Kind Reagerds,\n I Know A Guy Team.`, custom_str3?.trim());
 
           }).catch((error) => {
             console.error('Error updating document: ', error);
@@ -136,10 +136,10 @@ app.post("/notify", async (req, res) => {
 
         } else {
           //send sms recharge failure
-          SendSmsToCustomer(`Hi Future,\n sorry we had a technical issue while attempting to recharche your account (avoid attempting to recharge your account until you consult with us).\n Kindly contact our adminstration Team.\n\nOrder Details\n
-          Package: ${custom_str2}
-          \nGross Amount: ${amount_gross}
-           \nRefference Key: ${m_payment_id}`, custom_str3?.trim());
+          // SendSmsToCustomer(`Hi Future,\n sorry we had a technical issue while attempting to recharche your account (avoid attempting to recharge your account until you consult with us).\n Kindly contact our adminstration Team.\n\nOrder Details\n
+          // Package: ${custom_str2}
+          // \nGross Amount: ${amount_gross}
+          //  \nRefference Key: ${m_payment_id}`, custom_str3?.trim());
         }
       }).catch((error) => {
         //send sms recharge failure
