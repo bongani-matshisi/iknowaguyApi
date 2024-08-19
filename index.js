@@ -326,7 +326,43 @@ app.post('/smscustomer', async (req, res) => {
     console.log(error?.response.data);
     res.status(400).json({ message: "error: " + error?.message });
   }
-})
+});
+app.post('/smshomeowner', async (req, res) => {
+  try {
+    const { message, phone } = req.body;
+    let apiKey = process.env.SMS_API_KEY;
+    let apiSecret = process.env.SMS_API_SECRET;
+    let accountApiCredentials = apiKey + ':' + apiSecret;
+
+    let buff = new Buffer.from(accountApiCredentials);
+    let base64Credentials = buff.toString('base64');
+
+    let requestHeaders = {
+      headers: {
+        'Authorization': `Basic ${base64Credentials}`,
+        'Content-Type': 'application/json'
+      }
+    };
+    let contentMsg=`Hi ${message?.owner}, a bid has been placed on your project: ${message?.task} the contractor made an offer amount of R${message?.offerMade}, Company Name : ${message?.companyName}`;
+    
+    let requestData = JSON.stringify({
+      messages: [{
+        content: contentMsg?.trim(),
+        destination: phone.trim()
+      }]
+    });
+
+    const response = await axios.post('https://rest.smsportal.com/bulkmessages', requestData, requestHeaders);
+    if (response?.data) {
+      res.status(200).json(response?.data);
+    }
+
+  } catch (error) {
+    console.log("Send SMS Failure:");
+    console.log(error?.response.data);
+    res.status(400).json({ message: "error: " + error?.message });
+  }
+});
 app.listen(process.env.PORT, () => {
   console.log("Listening on port : " + process.env.PORT)
 });
