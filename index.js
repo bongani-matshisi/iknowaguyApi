@@ -236,7 +236,7 @@ app.post('/sendemailrecommendation', async (req, res) => {
       from: process.env.USER,
       to: email,
       subject: subject,
-      html: `<p>Dear ${name},<br>You have been recommended for a project on I Know a Guy website</p><br>
+      html: `<p>Dear ${name},<br>You have been recommended on I Know a Guy website</p><br>
       <p><h4 style="text-decoration: underline">Recommendation Details</h4><br>
       Contractor's Name : ${message?.contName}<br>
       Company Name: ${message?.cmpName}<br>
@@ -244,7 +244,8 @@ app.post('/sendemailrecommendation', async (req, res) => {
       Compay's Address : ${message?.cmpAddr}<br>
       Company's Service(s) : ${message?.cmpService}<br>
       Recommending Person's Name : ${message?.recomName}<br>
-      Indicated Relationship : "${message?.relation}"</p><br>
+      Indicated Relationship : "${message?.relation}"<br><br>
+      Click the link to register on the website. </p><a href="https://inkowaguy.vercel.app/contractor-registration" target="blank">Register On Website</a><br>
       <p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
     }).then(() => {
       res.status(200).json({ message: "email deliverd" });
