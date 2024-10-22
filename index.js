@@ -344,7 +344,7 @@ app.post('/smshomeowner', async (req, res) => {
         'Content-Type': 'application/json'
       }
     };
-    let contentMsg=`Hi ${message?.owner}, a bid has been placed on your project: ${message?.task} \nThe contractor made an offer amount of R${message?.offerMade}, Company Name / Skilled Individual : ${message?.companyName}`;
+    let contentMsg=`Hi ${message?.owner}, a bid has been placed on your project: ${message?.task} \nThe contractor made an offer amount of R${message?.offerMade}.\nCompany Name / Skilled Individual : ${message?.companyName}`;
     
     let requestData = JSON.stringify({
       messages: [{
