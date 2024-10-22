@@ -14,9 +14,12 @@ const validDomais = [
   'w1w.payfast.co.za',
   'w2w.payfast.co.za',
   "https://inkowaguy.vercel.app",
+  "https://www.inkowaguy.vercel.app",
   "https://www.iknowaguysa.co.za",
   "https://www.paysho.co.za",
-  "https://payfastpaymentvalidator.onrender.com"
+  "https://payfastpaymentvalidator.onrender.com",
+  "http://localhost",
+  "http://localhost:3000"
 ];
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
