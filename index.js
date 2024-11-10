@@ -8,6 +8,19 @@ const bodyParser = require('body-parser');
 const db = require("./dbConfig");
 const moment = require('moment');
 const nodemailer = require("nodemailer");
+const admin = require('firebase-admin');
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env?.projectId,
+      clientEmail: process.env?.clientEmail,
+      privateKey: process.env?.privateKey.replace(/\\n/g, '\n'),
+    }),
+  });
+}
+
+const auth = admin.auth();
+const db_admin = admin.firestore();
 const validDomais = [
   'www.payfast.co.za',
   'sandbox.payfast.co.za',
@@ -183,6 +196,25 @@ app.post('/verify-recaptcha', async (req, res) => {
   } catch (error) {
     console.error('Error verifying reCAPTCHA token:', error);
     res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+});
+// Define DELETE route
+app.delete('/deleteUser', async (req, res) => {
+  const { uid } = req.body;
+
+  if (!uid) {
+    return res.status(400).json({ error: 'User ID is required' });
+  }
+
+  try {
+    // Delete from Firebase Authentication
+    await auth.deleteUser(uid);
+
+    await db_admin.collection('Users').doc(uid).delete();
+
+    res.status(200).json({ message: 'User deleted' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error deleting user', details: error.message });
   }
 });
 
