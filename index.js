@@ -176,6 +176,36 @@ app.post("/notify", async (req, res) => {
   }
 
 });
+app.post('/projdelete', async (req, res) => {
+    const { ownerEmail, subject} = req.body;
+    try {
+      const transporter = nodemailer.createTransport({
+        host: process.env.HOST,
+        port: process.env.EMAILPORT,
+        secure: true,
+        auth: {
+          user: process.env.USER,
+          pass: process.env.PASS,
+        },
+        rejectUnauthorized: true,
+      });
+  
+      transporter.sendMail({
+        from: process.env.USER,
+        to: ownerEmail,
+        subject: subject,
+        html: `<p>Dear sir/madam , please note a project has been deleted on our platform under your name.</p><br>
+        
+        <p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
+      }).then(() => {
+        res.status(200).json({ message: "email deliverd" });
+      }).catch((error) => {
+        res.status(400).json({ message: "error: " + error?.message });
+      })
+    } catch (error) {
+      res.status(400).json({ message: error?.mesage });
+    }
+  });
 app.post('/verify-recaptcha', async (req, res) => {
   const { token } = req.body;
   const secretKey = process.env.SECRETKEY;
