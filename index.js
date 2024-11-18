@@ -291,6 +291,38 @@ app.post('/sendemailrecommendation', async (req, res) => {
     res.status(400).json({ message: error?.mesage });
   }
 });
+app.post('/refundmessage', async (req, res) => {
+    const { companyEmail, task, owner ,subject} = req.body;
+    try {
+      const transporter = nodemailer.createTransport({
+        host: process.env.HOST,
+        port: process.env.EMAILPORT,
+        secure: true,
+        auth: {
+          user: process.env.USER,
+          pass: process.env.PASS,
+        },
+        rejectUnauthorized: true,
+      });
+  
+      transporter.sendMail({
+        from: process.env.USER,
+        to: companyEmail,
+        subject: subject,
+        html: `<p>Dear sir/madam , please note you have been refunded for a project on our platform</p><br>
+        <p><h4 style="text-decoration: underline">Project Details</h4><br>
+        Home owner's Name : ${owner}<br>
+        Task: ${task}<br>
+        <p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
+      }).then(() => {
+        res.status(200).json({ message: "email deliverd" });
+      }).catch((error) => {
+        res.status(400).json({ message: "error: " + error?.message });
+      })
+    } catch (error) {
+      res.status(400).json({ message: error?.mesage });
+    }
+  });
 app.post('/sendemailAdminRecommendationCopy', async (req, res) => {
   const { email, message, subject } = req.body;
   try {
