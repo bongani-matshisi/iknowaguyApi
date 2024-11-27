@@ -194,7 +194,7 @@ app.post('/projdelete', async (req, res) => {
         from: process.env.USER,
         to: ownerEmail,
         subject: subject,
-        html: `<p>Dear sir/madam , please note a project has been deleted on our platform under your name.</p><br>
+        html: `<p>Dear sir/madam , <br>A project that you had posted on the I Know A Guy platform has been deleted by our administrator. If you have any questions or queries on this matter, please email us at support@iknowaguy.co.za.</p><br>
         
         <p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
       }).then(() => {
@@ -339,7 +339,7 @@ app.post('/refundmessage', async (req, res) => {
         from: process.env.USER,
         to: companyEmail,
         subject: subject,
-        html: `<p>Dear sir/madam , please note you have been refunded for a project on our platform</p><br>
+        html: `<p>Dear Sir/Madam ,<br>Please note that a project that you had placed a bid on on the I Know A Guy platform has been deleted. As a result, the credit(s) that you had used on it has been refunded back into your account. </p><br>
         <p><h4 style="text-decoration: underline">Project Details</h4><br>
         Home owner's Name : ${owner}<br>
         Task: ${task}<br>
