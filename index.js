@@ -26,8 +26,8 @@ const validDomais = [
   'sandbox.payfast.co.za',
   'w1w.payfast.co.za',
   'w2w.payfast.co.za',
-  "https://inkowaguy.vercel.app",
-  "https://www.inkowaguy.vercel.app",
+  "https://iknowaguy.vercel.app",
+  "https://www.iknowaguy.vercel.app",
   "https://www.iknowaguysa.co.za",
   "https://www.paysho.co.za",
   "https://payfastpaymentvalidator.onrender.com",
@@ -124,9 +124,7 @@ app.post("/notify", async (req, res) => {
 
     if (check1 == true) {
       // All checks have passed, the payment is successful
-      console.log("valid checks");
       const { m_payment_id, amount_gross, custom_str1, custom_str2, amount_fee, amount_net, custom_str3, name_first, name_last, email_address } = req?.body;
-      console.log(req.body);
       const docRef = db.collection('BidCredits').doc(custom_str1);
 
       db.collection('BidCredits').doc(custom_str1).get().then((doc) => {
@@ -142,27 +140,16 @@ app.post("/notify", async (req, res) => {
           }
           // Update specific fields in the document
           docRef.update(updateBalance).then(() => {
-            console.log('Document successfully updated!');
-            const site = 'https://inkowaguy.vercel.app/login';
-            //SendSmsToCustomer(`Hi ${name_first + " " + name_last},\n Thank you for recharging your account with us on I-know-A-Guy.\n You bought the ${custom_str2} package. You may review your account balance on the site : ${site} \n\n Kind Reagerds,\n I Know A Guy Team.`, custom_str3?.trim());
-
-          }).catch((error) => {
+            const site = 'https://iknowaguy.vercel.app/login';
+           }).catch((error) => {
             console.error('Error updating document: ', error);
           });
 
-        } else {
-          //send sms recharge failure
-          // SendSmsToCustomer(`Hi Future,\n sorry we had a technical issue while attempting to recharche your account (avoid attempting to recharge your account until you consult with us).\n Kindly contact our adminstration Team.\n\nOrder Details\n
-          // Package: ${custom_str2}
-          // \nGross Amount: ${amount_gross}
-          //  \nRefference Key: ${m_payment_id}`, custom_str3?.trim());
         }
       }).catch((error) => {
         //send sms recharge failure
         console.error('Error getting document: ', error);
       });
-      // Reference to the document
-
       res.status(200).json({ message: "valid checks" });
     } else {
       // Some checks have failed, check payment manually and log for investigation
@@ -310,7 +297,7 @@ app.post('/sendemailrecommendation', async (req, res) => {
       Company's Service(s) : ${message?.cmpService}<br>
       Recommending Person's Name : ${message?.recomName}<br>
       Indicated Relationship : "${message?.relation}"<br><br>
-      Click the link to register on the website. </p><a href="https://inkowaguy.vercel.app/contractor-registration" target="blank">Register On Website</a><br>
+      Click the link to register on the website. </p><a href="https://iknowaguy.vercel.app/contractor-registration" target="blank">Register On Website</a><br>
       <p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
     }).then(() => {
       res.status(200).json({ message: "email deliverd" });
