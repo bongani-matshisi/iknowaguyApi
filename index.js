@@ -27,6 +27,7 @@ const validDomais = [
   'w1w.payfast.co.za',
   'w2w.payfast.co.za',
   "https://iknowaguy.vercel.app",
+  "https://iknowaguy.co.za/",
   "https://www.iknowaguy.vercel.app",
   "https://www.iknowaguysa.co.za",
   "https://www.paysho.co.za",
@@ -140,7 +141,7 @@ app.post("/notify", async (req, res) => {
           }
           // Update specific fields in the document
           docRef.update(updateBalance).then(() => {
-            const site = 'https://iknowaguy.vercel.app/login';
+            const site = 'https://iknowaguy.co.za/login';
            }).catch((error) => {
             console.error('Error updating document: ', error);
           });
@@ -297,7 +298,7 @@ app.post('/sendemailrecommendation', async (req, res) => {
       Company's Service(s) : ${message?.cmpService}<br>
       Recommending Person's Name : ${message?.recomName}<br>
       Indicated Relationship : "${message?.relation}"<br><br>
-      Click the link to register on the website. </p><a href="https://iknowaguy.vercel.app/contractor-registration" target="blank">Register On Website</a><br>
+      Click the link to register on the website. </p><a href="https://iknowaguy.co.za/contractor-registration" target="blank">Register On Website</a><br>
       <p>Kind Regards,</p><br><strong>IKAG Admin</strong>`
     }).then(() => {
       res.status(200).json({ message: "email deliverd" });
