@@ -33,6 +33,8 @@ const validDomais = [
   "https://www.iknowaguysa.co.za",
   "https://www.paysho.co.za",
   "https://payfastpaymentvalidator.onrender.com",
+  "https://iknowaguyapi.onrender.com",
+  "iknowaguyapi.onrender.com",
   "http://localhost",
   "http://localhost:3000"
 ];
