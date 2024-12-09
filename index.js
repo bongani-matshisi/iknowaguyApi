@@ -33,7 +33,6 @@ const validDomais = [
   "https://www.iknowaguy.vercel.app",
   "https://www.iknowaguysa.co.za",
   "https://www.paysho.co.za",
-  "https://payfastpaymentvalidator.onrender.com",
   "https://iknowaguyapi.onrender.com",
   "iknowaguyapi.onrender.com",
   "http://localhost",
@@ -42,7 +41,7 @@ const validDomais = [
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({ origin: validDomais }));
 
 const pfValidSignature = (pfData, pfParamString, pfPassphrase = null) => {
   // Calculate security signature
@@ -199,13 +198,9 @@ app.post('/projdelete', async (req, res) => {
     }
   });
 app.post('/verify-recaptcha', async (req, res) => {
-	console.log('hello');
   const { token } = req.body;
-	console.log('hello2');
   const secretKey = process.env.SECRETKEY;
-	console.log(token);
   try {
-	  console.log(secretKey);
     const response = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
       params: {
         secret: secretKey,
@@ -214,11 +209,9 @@ app.post('/verify-recaptcha', async (req, res) => {
     });
 
     if (response.data.success) {
-	    console.log('success');
       res.json({ success: true, message: 'reCAPTCHA verification successful' });
     } else {
       // Token is invalid
-	    console.log(response.data);
       res.status(400).json({ success: false, message: 'reCAPTCHA verification failed' });
     }
   } catch (error) {
