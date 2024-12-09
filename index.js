@@ -41,7 +41,7 @@ const validDomais = [
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors({ origin: validDomais }));
+app.use(cors());
 
 const pfValidSignature = (pfData, pfParamString, pfPassphrase = null) => {
   // Calculate security signature
@@ -198,8 +198,11 @@ app.post('/projdelete', async (req, res) => {
     }
   });
 app.post('/verify-recaptcha', async (req, res) => {
+	console.log('hello');
   const { token } = req.body;
+	console.log('hello2');
   const secretKey = process.env.SECRETKEY;
+	console.log(token);
   try {
     const response = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
       params: {
