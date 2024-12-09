@@ -1,3 +1,4 @@
+
 require('dotenv').config();
 const axios = require("axios");
 const crypto = require("crypto");
@@ -217,6 +218,7 @@ app.post('/verify-recaptcha', async (req, res) => {
       res.json({ success: true, message: 'reCAPTCHA verification successful' });
     } else {
       // Token is invalid
+	    console.log(response.data);
       res.status(400).json({ success: false, message: 'reCAPTCHA verification failed' });
     }
   } catch (error) {
