@@ -204,6 +204,7 @@ app.post('/verify-recaptcha', async (req, res) => {
   const secretKey = process.env.SECRETKEY;
 	console.log(token);
   try {
+	  console.log(secretKey);
     const response = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
       params: {
         secret: secretKey,
@@ -212,6 +213,7 @@ app.post('/verify-recaptcha', async (req, res) => {
     });
 
     if (response.data.success) {
+	    console.log('success');
       res.json({ success: true, message: 'reCAPTCHA verification successful' });
     } else {
       // Token is invalid
