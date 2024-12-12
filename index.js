@@ -36,7 +36,9 @@ const validDomais = [
   "https://iknowaguyapi.onrender.com",
   "iknowaguyapi.onrender.com",
   "http://localhost",
-  "http://localhost:3000"
+  "http://localhost:3000",
+  "https://iknwo-a-guy-admin.vercel.app/",
+  "iknwo-a-guy-admin.vercel.app"
 ];
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
