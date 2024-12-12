@@ -43,7 +43,7 @@ const validDomais = [
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(cors({ origin: validDomais }));
+app.use(cors());
 
 const pfValidSignature = (pfData, pfParamString, pfPassphrase = null) => {
   // Calculate security signature
